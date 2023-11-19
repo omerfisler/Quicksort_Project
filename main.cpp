@@ -4,10 +4,6 @@
 #include <vector>
 #include <time.h>
 
-int medianOfThree(int a, int b, int c) {
-    return std::max(std::min(a,b), std::min(std::max(a,b),c));
-}
-
 template <typename T>
 int pivotLast(std::vector<T>& arr, int low, int high){
     int LastIndex = high;
