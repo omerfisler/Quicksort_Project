@@ -17,7 +17,11 @@ void quickSort(std::vector<T>& arr, int low, int high) {
         if (arr[j] <= pivot) 
             {
             i++;
-            std::swap(arr[i], arr[j]);
+            //To prevent swapping a value with ştself
+            if (i < j)
+                {
+                std::swap(arr[i], arr[j]);
+                }
             }
         }
         std::swap(arr[i + 1], arr[high]);
