@@ -20,14 +20,13 @@ void insertionSort(std::vector<T>& arr, int low, int high) {
     std::cout<<"insertionSort evoked"<<std::endl;
 }
 
-template <typename T>
-int pivotLast(std::vector<T>& arr, int low, int high){
-    int LastIndex = high;
-    return LastIndex;
+
+int pivotLast(int low, int high){
+    return high;        //Last Index = high 
 }
 
-template <typename T>
-int pivotRandom(std::vector<T>& arr, int low, int high){
+
+int pivotRandom(int low, int high){
     int randomIndex = low + (rand() % (high - low + 1)); 
     return randomIndex;
 }
@@ -37,6 +36,7 @@ int pivotMedianOfThree(std::vector<T>& arr, int low, int high){
     int randomIndex1 = low + (rand() % (high - low + 1));
     int randomIndex2 = low + (rand() % (high - low + 1));
     int randomIndex3 = low + (rand() % (high - low + 1));
+    // finding median of three elements algorithm.
     T median = std::max(std::min(arr[randomIndex1], arr[randomIndex2]), std::min(std::max(arr[randomIndex1], arr[randomIndex2]), arr[randomIndex3]));
     if (median == arr[randomIndex1])
         return randomIndex1;
@@ -44,6 +44,25 @@ int pivotMedianOfThree(std::vector<T>& arr, int low, int high){
         return randomIndex2;
     else
         return randomIndex3;
+}
+
+template <typename T>
+int partition(std::vector<T>& arr, int low, int high) {
+    T pivot = arr[high]; // pivot element <-- last element on array
+    int i = low - 1;
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            if (i<j) // to avoid swapping same elements (when i=j ==> a[i]=a[j]). and also i can't be greater than j due to algorithm.
+            {
+                std::swap(arr[i], arr[j]);
+            }
+        }
+    }
+
+    std::swap(arr[i + 1], arr[high]);
+    return i + 1;
 }
 
 template <typename T>
@@ -62,34 +81,17 @@ void quickSortHybrid(std::vector<T>& arr, int low, int high, char pivotType, int
             switch (pivotType) 
             {
                 case 'l':
-                    pivotIndex = pivotLast(arr, low, high);break;
+                    pivotIndex = pivotLast(low, high);break;
                 case 'r':
-                    pivotIndex = pivotRandom(arr, low, high);break;
+                    pivotIndex = pivotRandom(low, high);break;
                 case 'm':
                     pivotIndex = pivotMedianOfThree(arr, low, high);break;
                 default:
                     std::cout << "Invalid pivot type" << std::endl; break;       
             }
             std::swap(arr[pivotIndex],arr[high]);
-            T pivot = arr[high];
-
-            // Partitation Part: (core quicksort)
-            int i = low - 1;
-            for (int j = low; j <= high - 1; j++) 
-            {
-            //in Ascending
-            if (arr[j] <= pivot) 
-                {
-                i++;
-                //To prevent swapping a value with ştself
-                if (i < j)
-                    {
-                    std::swap(arr[i], arr[j]);
-                    }
-                }
-            }
-            std::swap(arr[i + 1], arr[high]);
-            pivotIndex = i+1;
+            
+            pivotIndex = partition(arr, low, high);
 
             quickSortHybrid(arr, low, pivotIndex - 1, pivotType, threshold); //Sorting the subarrays
             quickSortHybrid(arr, pivotIndex + 1, high, pivotType, threshold);
